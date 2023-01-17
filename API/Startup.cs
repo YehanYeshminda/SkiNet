@@ -50,6 +50,7 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles(); // used to serve static content such as images
 
             app.UseAuthorization();
 
