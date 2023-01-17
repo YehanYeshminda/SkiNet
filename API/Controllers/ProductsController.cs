@@ -7,7 +7,6 @@ namespace API.Controllers
 {
     public class ProductsController : BaseApiController
     {
-        private readonly StoreContext _context;
         private readonly IProductRepository _productRepo;
         public ProductsController(IProductRepository productRepo)
         {
@@ -15,7 +14,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts()
         {
             return Ok(await _productRepo.GetProductsAsync());
         }
@@ -24,6 +23,18 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             return await _productRepo.GetProductByIdAsync(id);
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
+        {
+            return Ok(await _productRepo.GetProductBrandsAsync());
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
+        {
+            return Ok(await _productRepo.GetProductTypesAsync());
         }
     }
 }
