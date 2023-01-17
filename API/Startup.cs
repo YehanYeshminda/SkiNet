@@ -1,3 +1,4 @@
+using API.Helpers;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,9 @@ namespace API
             
             // generic repo
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+
+            // adding automapper
+            services.AddAutoMapper(typeof(MappingProfiles));
 
             // others
             services.AddControllers();

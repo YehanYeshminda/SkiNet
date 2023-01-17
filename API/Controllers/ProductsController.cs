@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Core.Interfaces;
 using Core.Specifications;
 using API.Dtos;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -11,8 +12,10 @@ namespace API.Controllers
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IGenericRepository<ProductBrand> _productBrandRepo;
         private readonly IGenericRepository<ProductType> _productTypeRepo;
-        public ProductsController(IGenericRepository<Product> productsRepo, IGenericRepository<ProductBrand> productBrandRepo, IGenericRepository<ProductType> productTypeRepo)
+        private readonly IMapper _mapper;
+        public ProductsController(IGenericRepository<Product> productsRepo, IGenericRepository<ProductBrand> productBrandRepo, IGenericRepository<ProductType> productTypeRepo, IMapper mapper)
         {
+            _mapper = mapper;
             _productTypeRepo = productTypeRepo;
             _productBrandRepo = productBrandRepo;
             _productsRepo = productsRepo;
@@ -24,17 +27,7 @@ namespace API.Controllers
             var spec = new ProductsWithTypesAndBrandsSpecification();
             var products = await _productsRepo.ListAsync(spec);
 
-            // to return the data with the use the of a auto mapper
-            return products.Select(products => new ProductToReturnDto
-            {
-                Id = products.Id,
-                Name = products.Name,
-                Description = products.Description,
-                PictureUrl = products.PictureUrl,
-                Price = products.Price,
-                ProductBrand = products.ProductBrand.Name,
-                ProductType = products.ProductType.Name,
-            }).ToList();
+            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
         }
 
         [HttpGet("{id}")]
@@ -43,17 +36,8 @@ namespace API.Controllers
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await _productsRepo.GetEntityWithSpec(spec);
 
-            // this is to return without the use of the auto mapper
-            return new ProductToReturnDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                PictureUrl = product.PictureUrl,
-                Price = product.Price,
-                ProductBrand = product.ProductBrand.Name,
-                ProductType = product.ProductType.Name,
-            };
+            // mapping from, to?
+            return _mapper.Map<Product, ProductToReturnDto>(product);
         }
 
         [HttpGet("brands")]
