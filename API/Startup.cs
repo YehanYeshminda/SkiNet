@@ -19,6 +19,9 @@ namespace API
             // interfaces and repos
             services.AddScoped<IProductRepository, ProductRepository>();
             
+            // generic repo
+            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+
             // others
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => 
