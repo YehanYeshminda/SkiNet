@@ -1,5 +1,5 @@
-using System.Linq;
 using API.Errors;
+using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Core.Interfaces;
@@ -21,12 +21,6 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // interfaces and repos
-            services.AddScoped<IProductRepository, ProductRepository>();
-            
-            // generic repo
-            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
-
             // adding automapper
             services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -35,36 +29,17 @@ namespace API
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
 
-            services.Configure<ApiBehaviorOptions>(options => {
-                options.InvalidModelStateResponseFactory = actionContext => {
-                    var errors = actionContext.ModelState
-                        .Where(e => e.Value.Errors.Count > 0)
-                        .SelectMany(x => x.Value.Errors)
-                        .Select(x => x.ErrorMessage).ToArray();
-                    
-                    var errorResponse = new ApiValidationErrorResponse
-                    {
-                        Errors = errors
-                    };
+            // custom service extension
+            services.AddApplicationServices();
 
-                    return new BadRequestObjectResult(errorResponse);
-                };
-            });
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-            });
+            // custom swagger service extension
+            services.AddSwaggerDocumentation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ExceptionMiddleware>();
-
-            // could keep this in development as well
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 
             // using a request endpoint for the api with none matching in a controller
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
@@ -75,6 +50,8 @@ namespace API
             app.UseStaticFiles(); // used to serve static content such as images
 
             app.UseAuthorization();
+
+            app.UseSwaggerDocumentation();
 
             app.UseEndpoints(endpoints =>
             {
