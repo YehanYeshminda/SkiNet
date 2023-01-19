@@ -30,6 +30,15 @@ namespace API
 
             // custom swagger service extension
             services.AddSwaggerDocumentation();
+
+            // used to configure cors
+            services.AddCors(opt => 
+            {
+                opt.AddPolicy("CorsPolicy", policy => 
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +54,8 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles(); // used to serve static content such as images
 
+            // used to add cors
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
