@@ -13,7 +13,7 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts (brandId?: number, typeId?:number) {
+  getProducts (brandId?: number, typeId?:number, sort?:string) {
     let parameters = new HttpParams();
 
     if (brandId) {
@@ -22,6 +22,10 @@ export class ShopService {
 
     if (typeId) {
       parameters = parameters.append("typeId", typeId.toString());
+    }
+
+    if (sort) {
+      parameters = parameters.append("sort", sort)
     }
 
     // getting the body from the observable and then projecting into the pagination class
