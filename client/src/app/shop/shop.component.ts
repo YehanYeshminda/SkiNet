@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IBrand } from '../shared/models/brand';
 import { IPagination } from '../shared/models/pagination';
 import { IProduct } from '../shared/models/product';
@@ -12,23 +12,28 @@ import { ShopService } from './shop.service';
   styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
+  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+
   products: IProduct[];
   brands: IBrand[];
   types: IProductType[];
   shopParams = new ShopParams();
   totalCount: number;
-  
+
   sortOptions = [
     {
-      name: 'Alphabetical', value: 'name'
+      name: 'Alphabetical',
+      value: 'name',
     },
-    { 
-      name: 'Price: Low to High', value: 'priceAsc' 
+    {
+      name: 'Price: Low to High',
+      value: 'priceAsc',
     },
-    { 
-      name: 'Price: High to Low', value: 'priceDesc' 
-    }
-  ]
+    {
+      name: 'Price: High to Low',
+      value: 'priceDesc',
+    },
+  ];
 
   constructor(private shopService: ShopService) {}
 
@@ -40,19 +45,17 @@ export class ShopComponent implements OnInit {
 
   getProducts() {
     // these are optional to pass which is the brand id and the typeid
-    this.shopService
-      .getProducts(this.shopParams)
-      .subscribe(
-        (res: IPagination) => {
-          this.products = res.data
-          this.shopParams.pageNumber = res.pageIndex;
-          this.shopParams.pageSize = res.pageSize;
-          this.totalCount = res.count;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    this.shopService.getProducts(this.shopParams).subscribe(
+      (res: IPagination) => {
+        this.products = res.data;
+        this.shopParams.pageNumber = res.pageIndex;
+        this.shopParams.pageSize = res.pageSize;
+        this.totalCount = res.count;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   getBrands() {
@@ -94,6 +97,17 @@ export class ShopComponent implements OnInit {
 
   onPageChanged(event: any) {
     this.shopParams.pageNumber = event;
+    this.getProducts();
+  }
+
+  onSearch() {
+    this.shopParams.search = this.searchInput.nativeElement.value;
+    this.getProducts();
+  }
+
+  onReset() {
+    this.searchInput.nativeElement.value = '';
+    this.shopParams = new ShopParams();
     this.getProducts();
   }
 }
