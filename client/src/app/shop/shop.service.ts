@@ -4,28 +4,30 @@ import { delay, map } from 'rxjs';
 import { IBrand } from '../shared/models/brand';
 import { IPagination } from '../shared/models/pagination';
 import { IProductType } from '../shared/models/productType';
+import { ShopParams } from '../shared/models/shopParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopService {
-  baseUrl: string = "https://localhost:5001/api/"
+  baseUrl: string = "https://localhost:5001/api/";
+
 
   constructor(private http: HttpClient) { }
 
-  getProducts (brandId?: number, typeId?:number, sort?:string) {
+  getProducts (shopParams: ShopParams) {
     let parameters = new HttpParams();
 
-    if (brandId) {
-      parameters = parameters.append('brandId', brandId.toString());
+    if (shopParams.brandId) {
+      parameters = parameters.append('brandId', shopParams.brandId.toString());
     }
 
-    if (typeId) {
-      parameters = parameters.append("typeId", typeId.toString());
+    if (shopParams.typeId) {
+      parameters = parameters.append("typeId", shopParams.typeId.toString());
     }
 
-    if (sort) {
-      parameters = parameters.append("sort", sort)
+    if (shopParams.sort) {
+      parameters = parameters.append("sort", shopParams.sort)
     }
 
     // getting the body from the observable and then projecting into the pagination class

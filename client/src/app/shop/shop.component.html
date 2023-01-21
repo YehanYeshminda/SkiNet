@@ -14,7 +14,7 @@
 
                 <!-- used to pass a value to the selected brand and then set the class for the brand -->
                 <li class="list-group-item" *ngFor="let item of brands" aria-current="true"
-                    [class.active]="item.id === this.brandIdSelected" [value]="item.id"
+                    [class.active]="item.id === this.shopParams.brandId"[value]="item.id"
                     (click)="onBrandSelected(item.id)">
                     {{ item.name }}
                 </li>
@@ -22,7 +22,7 @@
             <ul class="list-group my-3">
                 <h5 class="text-warning ml-3">Types</h5>
                 <li class="list-group-item" *ngFor="let item of types" aria-current="true"
-                    [class.active]="item.id === this.typeIdSelected" [value]="item.id"
+                    [class.active]="item.id === this.shopParams.typeId" [value]="item.id"
                     (click)="onTypeSelected(item.id)">
                     {{ item.name }}
                 </li>
@@ -51,7 +51,7 @@
             <pagination
                 class="d-flex justify-content-center" 
                 [boundaryLinks]="true" 
-                [totalItems]="77" 
+                [totalItems]="this.totalCount" 
                 previousText="&lsaquo;" 
                 nextText="&rsaquo;" 
                 firstText="&laquo;"
