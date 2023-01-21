@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { delay, map } from 'rxjs';
 import { IBrand } from '../shared/models/brand';
 import { IPagination } from '../shared/models/pagination';
 import { IProductType } from '../shared/models/productType';
@@ -12,8 +13,25 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts () {
-    return this.http.get<IPagination>(this.baseUrl + "products?pageSize=50");
+  getProducts (brandId?: number, typeId?:number) {
+    let parameters = new HttpParams();
+
+    if (brandId) {
+      parameters = parameters.append('brandId', brandId.toString());
+    }
+
+    if (typeId) {
+      parameters = parameters.append("typeId", typeId.toString());
+    }
+
+    // getting the body from the observable and then projecting into the pagination class
+    return this.http.get<IPagination>(this.baseUrl + "products", { observe: 'response', params: parameters})
+      .pipe(
+        // delay(1000),
+        map(res => {
+          return res.body
+        })
+      )
   }
 
   getBrands () {

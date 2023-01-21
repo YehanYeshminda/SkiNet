@@ -14,6 +14,8 @@ export class ShopComponent implements OnInit {
   products: IProduct[];
   brands: IBrand[];
   types: IProductType[];
+  brandIdSelected: number;
+  typeIdSelected: number;
 
   constructor(private shopService: ShopService) {}
 
@@ -24,20 +26,23 @@ export class ShopComponent implements OnInit {
   }
 
   getProducts() {
-    this.shopService.getProducts().subscribe(
-      (res: IPagination) => {
-        this.products = res.data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    // these are optional to pass which is the brandid and the typeid
+    this.shopService
+      .getProducts(this.brandIdSelected, this.typeIdSelected)
+      .subscribe(
+        (res: IPagination) => {
+          this.products = res.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   getBrands() {
     this.shopService.getBrands().subscribe(
       (res: IBrand[]) => {
-        this.brands = res;
+        this.brands = [{ id: 0, name: 'All' }, ...res];
       },
       (err) => {
         console.log(err);
@@ -48,11 +53,21 @@ export class ShopComponent implements OnInit {
   getTypes() {
     this.shopService.getTypes().subscribe(
       (res: IProductType[]) => {
-        this.types = res
+        this.types = [{ id: 0, name: 'All' }, ...res];
       },
       (err) => {
-        console.log(err)
+        console.log(err);
       }
-    )
+    );
+  }
+
+  onBrandSelected(brandId: number) {
+    this.brandIdSelected = brandId;
+    this.getProducts(); // this will fetch the brands selected;
+  }
+
+  onTypeSelected(typeId: number) {
+    this.typeIdSelected = typeId;
+    this.getProducts();
   }
 }
