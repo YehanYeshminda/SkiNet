@@ -7,44 +7,47 @@ import { IProductType } from '../shared/models/productType';
 import { ShopParams } from '../shared/models/shopParams';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShopService {
-  baseUrl: string = "https://localhost:5001/api/";
+  baseUrl: string = 'https://localhost:5001/api/';
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getProducts (shopParams: ShopParams) {
+  getProducts(shopParams: ShopParams) {
     let parameters = new HttpParams();
 
-    if (shopParams.brandId) {
+    if (shopParams.brandId !== 0) {
       parameters = parameters.append('brandId', shopParams.brandId.toString());
     }
 
-    if (shopParams.typeId) {
-      parameters = parameters.append("typeId", shopParams.typeId.toString());
+    if (shopParams.typeId !== 0) {
+      parameters = parameters.append('typeId', shopParams.typeId.toString());
     }
 
-    if (shopParams.sort) {
-      parameters = parameters.append("sort", shopParams.sort)
-    }
+    parameters = parameters.append('sort', shopParams.sort);
+    parameters = parameters.append('pageIndex', shopParams.pageNumber.toString());
+    parameters = parameters.append('pageIndex', shopParams.pageSize.toString());
 
     // getting the body from the observable and then projecting into the pagination class
-    return this.http.get<IPagination>(this.baseUrl + "products", { observe: 'response', params: parameters})
+    return this.http
+      .get<IPagination>(this.baseUrl + 'products', {
+        observe: 'response',
+        params: parameters,
+      })
       .pipe(
         // delay(1000),
-        map(res => {
-          return res.body
+        map((res) => {
+          return res.body;
         })
-      )
+      );
   }
 
-  getBrands () {
-    return this.http.get<IBrand[]>(this.baseUrl + "products/brands");
+  getBrands() {
+    return this.http.get<IBrand[]>(this.baseUrl + 'products/brands');
   }
 
-  getTypes () {
-    return this.http.get<IProductType[]>(this.baseUrl + "products/types");
+  getTypes() {
+    return this.http.get<IProductType[]>(this.baseUrl + 'products/types');
   }
 }
