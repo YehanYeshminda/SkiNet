@@ -14,8 +14,8 @@ export class ShopComponent implements OnInit {
   products: IProduct[];
   brands: IBrand[];
   types: IProductType[];
-  brandIdSelected: number;
-  typeIdSelected: number;
+  brandIdSelected: number = 0; // this is to select all default
+  typeIdSelected: number = 0; // this to select all default
 
   constructor(private shopService: ShopService) {}
 
