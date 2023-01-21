@@ -4,10 +4,7 @@
         <section class="col-3">
             <h5 class="text-warning ml-3">Sorts</h5>
             <select class="custom-select mb-3" (change)="onSortSelected($event.target.value)">
-                <option 
-                    *ngFor="let sort of sortOptions"
-                    [value]="sort.value"
-                >
+                <option *ngFor="let sort of sortOptions" [value]="sort.value">
                     {{ sort.name }}
                 </option>
             </select>
@@ -16,23 +13,17 @@
                 <h5 class="text-warning ml-3">Brands</h5>
 
                 <!-- used to pass a value to the selected brand and then set the class for the brand -->
-                <li class="list-group-item" 
-                    *ngFor="let item of brands" aria-current="true"
-                    [class.active]="item.id === this.brandIdSelected"    
-                    [value]="item.id" 
-                    (click)="onBrandSelected(item.id)"
-                >
+                <li class="list-group-item" *ngFor="let item of brands" aria-current="true"
+                    [class.active]="item.id === this.brandIdSelected" [value]="item.id"
+                    (click)="onBrandSelected(item.id)">
                     {{ item.name }}
                 </li>
             </ul>
             <ul class="list-group my-3">
                 <h5 class="text-warning ml-3">Types</h5>
-                <li class="list-group-item" 
-                    *ngFor="let item of types" aria-current="true"
-                    [class.active]="item.id === this.typeIdSelected"    
-                    [value]="item.id" 
-                    (click)="onTypeSelected(item.id)"
-                    >
+                <li class="list-group-item" *ngFor="let item of types" aria-current="true"
+                    [class.active]="item.id === this.typeIdSelected" [value]="item.id"
+                    (click)="onTypeSelected(item.id)">
                     {{ item.name }}
                 </li>
             </ul>
@@ -51,12 +42,22 @@
                     <button class="btn btn-outline-success my-2 ml-2">Reset</button>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-4 mb-4" *ngFor="let item of products">
                     <app-product-item [product]="item"></app-product-item>
                 </div>
             </div>
+            <pagination
+                class="d-flex justify-content-center" 
+                [boundaryLinks]="true" 
+                [totalItems]="77" 
+                previousText="&lsaquo;" 
+                nextText="&rsaquo;" 
+                firstText="&laquo;"
+                lastText="&raquo;">
+            </pagination>
         </section>
     </div>
+
 </div>
