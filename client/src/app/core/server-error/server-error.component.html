@@ -1,3 +1,10 @@
 <div class="container mt-5">
-    <h1>Internal server error</h1>
+    <h1>Internal server error - refreshing the page will make this go away</h1>
+
+    <h5 class="text-danger">Error: {{ error.message }}</h5>
+
+    <p class="font-weight-bold">Not: If you are seeing this then angular is probably is not responsible</p>
+
+    <h2>Th details of the error are,</h2>
+    <p>{{ error.details }}</p>
 </div>
