@@ -15,6 +15,9 @@ namespace API.Extensions
             // generic repo
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
 
+            // redis service
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            
             services.Configure<ApiBehaviorOptions>(options => {
                 options.InvalidModelStateResponseFactory = actionContext => {
                     var errors = actionContext.ModelState
