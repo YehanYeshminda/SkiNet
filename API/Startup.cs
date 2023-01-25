@@ -3,6 +3,7 @@ using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -24,6 +25,14 @@ namespace API
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+
+            // adding redis for the basket
+            services.AddSingleton<ConnectionMultiplexer>(c => {
+                // adding true to any unknown configuration
+                var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
+
+                return ConnectionMultiplexer.Connect(configuration);
+            });
 
             // custom service extension
             services.AddApplicationServices();
