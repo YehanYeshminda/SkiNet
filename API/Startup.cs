@@ -74,3 +74,6 @@ namespace API
         }
     }
 }
+
+// in order to start redis we can use the following command: docker-compose up --detach or we can use redis-server
+// in order to stop redis we can use the following command: redis-cli then shutdown
