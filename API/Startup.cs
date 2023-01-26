@@ -27,10 +27,8 @@ namespace API
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
 
             // adding redis for the basket
-            services.AddSingleton<ConnectionMultiplexer>(c => {
-                // adding true to any unknown configuration
+            services.AddSingleton<IConnectionMultiplexer ,ConnectionMultiplexer>(c => {
                 var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
-
                 return ConnectionMultiplexer.Connect(configuration);
             });
 

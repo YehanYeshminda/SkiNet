@@ -2,6 +2,7 @@ using API.Errors;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace API.Extensions
 {
@@ -12,11 +13,12 @@ namespace API.Extensions
             // interfaces and repos
             services.AddScoped<IProductRepository, ProductRepository>();
             
+                // redis service
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            
             // generic repo
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
 
-            // redis service
-            services.AddScoped<IBasketRepository, BasketRepository>();
             
             services.Configure<ApiBehaviorOptions>(options => {
                 options.InvalidModelStateResponseFactory = actionContext => {
