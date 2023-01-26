@@ -29,6 +29,7 @@ export class BasketService {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe({ // this is in order to subscribe to the observable
       next: (response: IBasket) => {
         this.basketSource.next(response); // this is in order to update the basketSource with the basket that we get from the API
+        console.log(response);
       },
       error: (error) => {
         console.log(error); // this is in order to log the error in the console
@@ -54,6 +55,7 @@ export class BasketService {
 
   // this method is used in order to increment the quantity of an item in the basket
   addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
+    console.log(items);
     const index = items.findIndex((i) => i.id === itemToAdd.id); // this is in order to find the index of the item in the basket
     if (index === -1) { // this is in order to check if the item doesn't exist in the basket
       itemToAdd.qty = quantity; // this is in order to set the quantity of the item
