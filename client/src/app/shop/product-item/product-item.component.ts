@@ -11,11 +11,11 @@ export class ProductItemComponent implements OnInit {
   @Input() product: IProduct;
 
   constructor(private basketService: BasketService) { }
-  
+
   ngOnInit(): void {
   }
 
   addItemToBasket() {
-    this.basketService.addItemToBasket(this.product); // this is in order to add the item to the basket
+    this.basketService.addItemToBasket(this.product); // this is the line that is causing the error
   }
 }

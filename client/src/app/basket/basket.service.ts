@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Basket, IBasket, IBasketItem } from '../shared/models/basket';
+import {Basket, IBasket, IBasketItem, IBasketTotals} from '../shared/models/basket';
 import { IProduct } from '../shared/models/product';
 
 @Injectable({
@@ -11,7 +11,9 @@ import { IProduct } from '../shared/models/product';
 export class BasketService {
   baseUrl = environment.apiUrl;
   private basketSource = new BehaviorSubject<IBasket>(null); // BehaviorSubject is a type of observable
+  private basketTotalSource = new BehaviorSubject<IBasketTotals>(null); // BehaviorSubject is a type of observable
   basket$ = this.basketSource.asObservable(); // used in order to access the observable from the template as a public
+  basketTotal$ = this.basketTotalSource.asObservable(); // used in order to access the observable from the template as a public
 
   constructor(private http: HttpClient) {}
 
@@ -20,6 +22,7 @@ export class BasketService {
     return this.http.get(this.baseUrl + 'basket?id=' + id).pipe( // this is in order to subscribe to the observable
       map((basket: IBasket) => {
         this.basketSource.next(basket); // this is in order to update the basketSource with the basket that we get from the API
+        this.calculateTotals(); // this is in order to calculate the totals since we have already gotten the basket at this point
       })
     );
   }
@@ -29,7 +32,7 @@ export class BasketService {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe({ // this is in order to subscribe to the observable
       next: (response: IBasket) => {
         this.basketSource.next(response); // this is in order to update the basketSource with the basket that we get from the API
-        console.log(response);
+        this.calculateTotals(); // this is in order to calculate the totals since we have already gotten the basket at this point
       },
       error: (error) => {
         console.log(error); // this is in order to log the error in the console
@@ -38,7 +41,7 @@ export class BasketService {
   }
 
   // this method is used in order to get the current basket value
-  getCurrentBasketValue() { // this is in order to get the current value of the basket in a easy way
+  getCurrentBasketValue() { // this is in order to get the current value of the basket in an easy way
     return this.basketSource.value;
   }
 
@@ -84,5 +87,13 @@ export class BasketService {
       brand: item.productBrand,
       type: item.productType,
     };
+  }
+
+  private calculateTotals() {
+    const basket = this.getCurrentBasketValue(); // this is in order to get the current basket value
+    const shipping = 0; // this is in order to set the shipping
+    const subtotal = basket.items.reduce((a, b) => (b.price * b.qty) + a, 0); // this is in order to calculate the subtotal of all the basket items
+    const total = subtotal + shipping; // this is in order to calculate the total of the basket
+    this.basketTotalSource.next({shipping, total, subtotal}); // this is in order to update the basketTotalSource with the new values
   }
 }

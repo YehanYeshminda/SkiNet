@@ -2,7 +2,7 @@
     There are no items in your basket
 </div>
 
-<div class="container mt-5">
+<div class="container mt-2">
     <div *ngIf="(basket$ | async) as basket">
         <div class="pb-5">
             <div class="container">
@@ -53,13 +53,15 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fa fa-minus-circle text-warning mr-2"
                                                     style="cursor: pointer; font-size: 2em;"></i>
-                                                <span class="font-weight-bold" style="font-size: 1.5em;">{{ item.qty }}</span>
+                                                <span class="font-weight-bold" style="font-size: 1.5em;">{{ item.qty
+                                                    }}</span>
                                                 <i class="fa fa-plus-circle text-warning mx-2"
                                                     style="cursor: pointer; font-size: 2em;"></i>
                                             </div>
                                         </td>
 
-                                        <td class="align-middle"><strong>{{ item.price * item.qty | currency }}</strong></td>
+                                        <td class="align-middle"><strong>{{ item.price * item.qty | currency }}</strong>
+                                        </td>
 
                                         <td class="align-middle text-center">
                                             <a routerLink="" class="text-danger">
