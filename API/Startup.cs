@@ -41,6 +41,7 @@ namespace API
 
             // custom service extension
             services.AddApplicationServices();
+            services.AddIdentityServices();
 
             // custom swagger service extension
             services.AddSwaggerDocumentation();
