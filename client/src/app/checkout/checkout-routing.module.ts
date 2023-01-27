@@ -12,7 +12,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class CheckoutRoutingModule {}
